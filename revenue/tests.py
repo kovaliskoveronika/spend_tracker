@@ -49,8 +49,6 @@ class RevenueTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        data = response.data
-
         data_db = RevenueStatistic.objects.values("date", "name").annotate(
             total_revenue=Sum("revenue"),
             total_spend=Sum("spend__spend"),
@@ -59,7 +57,7 @@ class RevenueTest(TestCase):
             total_conversion=Sum("spend__conversion"),
         )
         serializer = RevenueStatisticSerializer(data_db, many=True)
-        self.assertEqual(data, serializer.data)
+        self.assertEqual(response.data, serializer.data)
 
     def test_create_revenue_statistic(self):
         new_revenue_data = {
